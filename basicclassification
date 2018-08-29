@@ -1,0 +1,37 @@
+Fashion MNIST:==
+
+ #importing libraries import tensorflow as tf from tensorflow import keras
+
+#helper libraries import numpy as np import matplotlib.pyplot as plt
+
+print(tf.version)
+
+#import fashion_mnist dataset fashion_mnist=keras.datasets.fashion_mnist (train_images,train_labels),(test_images,test_labels)=fashion_mnist.load_data()
+
+class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+
+#explore the data train_images.shape
+
+len(train_images)
+
+#preprocess the data #inspect the first image..pixels are from 0 to 255 plt.figure() plt.imshow(train_images[0]) plt.colorbar() plt.grid(False)
+
+#we can scale the image to the range from 0 to 1 and convert the component from int to float #by casting it train_images=train_images/255.0 test_images=test_images/255.0
+
+# now we are displaying the 25 images with name of its class plt.figure(figsize=(10,10)) for i in range(25): plt.subplot(5,5,i+1) plt.xticks([]) plt.yticks([]) plt.grid(False) plt.imshow(train_images[i], cmap=plt.cm.binary) plt.xlabel(class_names[train_labels[i]])
+
+#build model model=keras.Sequential([ keras.layers.Flatten(input_shape=(28,28)), keras.layers.Dense(128, activation=tf.nn.relu), keras.layers.Dense(10,activation=tf.nn.softmax) ])
+
+#compile the model model.compile(optimizer=tf.train.AdamOptimizer(), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+#train the model model.fit(train_images,train_labels,epochs=5)
+
+#evaluate accuracy test_loss,test_accuracy=model.evaluate(test_images,test_labels) print('test accuracy:',test_accuracy)
+
+#overfitting is there because here accuracy of training is higher than accuracy of testing #predictions from test data of 1st image predictions=model.predict(test_images) predictions[0]
+
+#clearly we have seen that 9th label have maximum confidence to happen
+
+np.argmax(predictions[0])
+
+#the 1st image is ankleboot as its label is 9 its matches with the prediction...hence our prediction is successful test_labels[0]
